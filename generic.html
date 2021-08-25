@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Predicting Electricity Cost Trends Using Twitter Data </title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Home</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li class="active"><a href="index.html">My Portfolio</a></li>
+							<li class="active"><a href="generic.html">Electric Trend Prediciton</a></li>
+							<li class="active"><a href="elements.html">FPS Game</a></li>
+							<li class="active"><a href="number.html">RAT Attack</a></li>
+						</ul>
+						<ul class="icons">
+							
+							<li><a href="https://www.linkedin.com/in/rhett-green-1b809921a/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+							<li><a href="https://github.com/greenrhett/Rhett-Greens-Projects" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h1>Predicting Electricity Cost Trends Using Twitter Data<br />
+									</h1>
+									<p>Data Mining Project</p>
+								</header>
+								<div class="image main"><img src="images/Unknown.jpeg"  width = "150" height = "450" /></div>
+								<p>For my final project I was asked to implement what I had learned about machine learning into a real world project that had practical implications. I decided to use twitter data to see if there was a correlation between the sentiment of tweets in a state and the trend of electricity costs in that area. To do this I used a twitter scraper to generate data sets containing tweets from a state during 2020-2021. This data set was then cleaned and preprocessed so a Naive Bayes Sentiment Analysis model could run over each individual tweet to determine its sentiment. The number of positive tweets and negative tweets was then counted and if a state had more negative than positive tweets the states sentiment regarding electricity was determined to be negative so the model predicted costs were rising, if there were more positive than negative tweets the model predicted that electric costs were trending down. The model was tested on 10 states with the highest price change during 2020-2021. The results for these chosen states was promising with the model correctly predicting the trend of 7 out of 10 states. The work done on this model provides a promising proof of concept that with additional testing and work could prove an accurate model for predicting electric cost trends.
+
+									<p>The project can be split into 3 main parts:
+									<li>Scraper</li>
+									<li>Preprocessing</li>
+									<li>Naive Bayes Model</li>
+									</p>
+
+								<p> <strong>Scraper</strong></p>
+								<p> <li>A web scraper was constructed which is the process of importing information from a website into a local file saved on your computer and it presents one of the most efficient and flexible ways to get data from the web in real time or from historical records</li>
+									<li>The Scraper used keywords related to electric costs to pull relevant tweets. Also, a geo tag and date range were used to ensure the tweets were separated by state and from the correct time period.</li>
+									<div class="image main"><img src="images/Screen Shot 2021-08-17 at 12.17.44 PM.png"  width = "2338" height = "326" /></div>
+									<li>The scraper returned a csv file for each state with 36 columns containing the tweet and other information regarding the tweet. </li>
+									<div class="image main"><img src="images/Screen Shot 2021-08-17 at 12.37.58 PM.png"  width = "2338" height = "326" /></div>
+									<li>For the 2020-2021 time period Texas generated 12,131 tweets, Hawaii generated 271 tweets, Idaho generated 51 tweets, Kansas generated 1,233 tweets, Louisiana generated 5,286 tweets, Arizona generated 631 tweets, Utah generated 74 tweets, Wisconsin generated 481 tweets, California generated 7,883, and Massachusetts generated 1500 tweets. </li>
+									</p>
+
+								<p> <strong>Preprocessing</strong></p>
+								<p> <li>The original csv file contained 36 columns. This was reduced to one after removing obsolete information, such as rows with “N/A” values to prevent skewing the data. The only column needed for sentiment analysis was the tweet column that contained the actual text submission of the tweet.</li>
+									<li> Any duplicates of the data we’re dropped to ensure the data didn’t become skewed by repeating tweets that could be generated by bots.</li>
+									<li>Cleaning the data involved removing any:
+										web links, whether that be “http” or “bitly” links,
+										pictures, 
+										nonessential information such as retweet, @user, and hashtags,
+										audio or video tags.</li>
+									<li>Next the tweets were lemmatized and tokenized, each word was reduced to its base form and the sentences were turned into sets of strings where each word is a token that the model can use for training to determine if it is a positive or negative word. A database of stop words was also used to remove filler words like “a”, “the”, "and", “etc” to make the data set more meaningful and cost effective in relation to computing time as these words are useless for natural language processing and could dilute the sentiment scores.</li>
+									</p>
+									<figure>
+										<figcaption>The Tweets Before Preprocessing</figcaption>
+										<div class="image main"><img src="images/Screen Shot 2021-08-17 at 1.46.51 PM.png"  width = "2338" height = "326" /></div>
+										<figcaption>The Tweets After Preprocessing</figcaption>
+										<div class="image main"><img src="images/Screen Shot 2021-08-17 at 1.47.03 PM.png"  width = "666" height = "612" /></div>
+									</figure>
+
+									<p> <strong>Naive Bayes Sentiment Analysis</strong></p>
+									<p> <li>Natural Language ToolKit or NLTK had a prebuilt twitter data set for generating models. Its tweets were classified into two different files “positive_tweets.json” and “negative_tweets.json. This predetermined sorting made it ideal for training the Naive Bayes Classifier.</li>
+									<li>Using this data set a frequency table was constructed that counted how many times a word appeared in either positive or negative tweets.</li>
+									<li>After counting the number of words in a tweet each word’s sentiment probability was calculated using the frequency of that word in negative tweets and positive tweets. The equation was: </li>
+									<p></p>
+									<p>probPos = (frequencyPositive + 1) / (numPos + length) </p>
+									<li>The same was done for the probability of negativity and the probability of a words sentiment was returned by performing a logarithm of the division of the probPos by the probNeg</li>
+									<li>A tweets sentiment was found by accumulating the individual sentiment scores of each word in the tweet to form a sentiment number. If the resulting number was negative, the tweet was considered negative. If the resulting number was positive, it was considered a positive tweet. The greater the distance from zero (negative or positive), the more confident the model was in its prediction. </li>
+									<p></p>
+									<p> Example: MY PUPPY BROKE HER FOOT :( -> -10.35 <br>
+									The model strongly believes this tweets sentiment is negative</p>
+									<p></p>
+									</p>
+
+									<p> <strong>Results</strong></p>
+									<p>To check the accuracy of this model it was run on the prelabeled test set and out of the 2000 test tweets, the model correctly identified 1,991 with only 9 errors. This is a 99.996% success rate providing statistical evidence that this model was highly accurate. The model was then applied to the tweets for each state and the sentiment of each tweet was recorded and added to either the positive or negative tweet count. Using these counts the model predicted the states electric cost trends according to the majority sentiment, positive (Decreasing Prices) or negative (Increasing prices).</p>
+									<p></p>
+									<figure>
+										<figcaption>Results of Naive Bayes Classifier on Test Data</figcaption>
+										<div class="image main"><img src="images/Screen Shot 2021-08-17 at 2.38.10 PM.png"  width = "2338" height = "326" /></div>
+										<figcaption>Arizona Model Prediction and Overall Prediction Accuracy</figcaption>
+										<div class="image main"><img src="images/Screen Shot 2021-08-17 at 2.38.03 PM.png"  width = "2338" height = "326" /></div>
+									</figure>
+									
+
+									<div class="images main">
+										<figcaption>Overview and GUI Demo</figcaption>
+										<p></p>
+										<iframe width="560" height="315" src="https://www.youtube.com/embed/gQLoXK6tt3o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+										<p></p>
+										<figcaption>Click To Download Study Paper</figcaption>
+										<a href="images/Group 5_1_Final_Paper copy.pdf" download>Study ACM Paper</a>
+									</div>
+
+								</p>
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section class="alt">
+								<h3>Address</h3>
+								<p>123 Milliken Dr #100<br />
+									Livingston, TX 77351</p>
+							</section>
+							<section>
+								<h3>Email</h3>
+								<p></a>rhett.green9@gmail.com</p>
+							</section>
+							<section>
+								<h3>Linkedin</h3>
+								<ul class="icons alt">
+									<li><a href="https://www.linkedin.com/in/rhett-green-1b809921a/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+									<li><a href="https://github.com/greenrhett/Rhett-Greens-Projects" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+
+				
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
